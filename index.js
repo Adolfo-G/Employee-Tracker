@@ -279,5 +279,8 @@ function updateEmployeeRole() {
             }, 100);
         })
 }
-
+function quit() {
+    console.log("Bye")
+    return process.exit()
+}
 start()
