@@ -159,6 +159,70 @@ function addRole() {
             }, 100);
         })
 }
+function addEmployee() {
+    let etd = []
+    sql.query("select * from employees", (err, results) => {
+        if (err) { console.log(err) }
+        addETd(results)
+    })
+    function addETd(value) {
+        for (let l = 0; l < value.length; l++) {
+            etd.push({
+                name: value[l]["first_name"],
+                value: value[l]["id"]
+            })
+        }
+    }
+
+    let rtd = []
+    sql.query("select * from roles", (err, results) => { addRTd(results) })
+    function addRTd(value) {
+        for (let i = 0; i < value.length; i++) {
+            rtd.push({
+                name: value[i]["title"],
+                value: value[i]["id"]
+            })
+        }
+    }
+    const newEmployee = () => {
+        return inquirer.prompt([
+            {
+                type: "input",
+                name: "firstName",
+                message: "Please enter the new employee's first name."
+            },
+            {
+                type: "input",
+                name: "lastName",
+                message: "Please enter the new employee's last name."
+            },
+            {
+                type: "list",
+                name: "deptChoice",
+                message: "Please select a roll:",
+                choices: rtd
+            },
+            {
+                type: "list",
+                name: "managerChoice",
+                message: "Please select a manager:",
+                choices: etd
+            }
+        ])
+    }
+    newEmployee()
+        .then((data) => {
+            sql.query(`INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES("${data.firstName}","${data.lastName}","${data.deptChoice}","${data.managerChoice}")`, (err, results) => { console.table("Employee Added") })
+        })
+        .then((data) => {
+            sql.query(`SELECT employees.id,first_name,last_name,title,department,salary,employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id;`, (err, results) => { console.table(results) })
+        })
+        .then((data) => {
+            setTimeout(() => {
+                start();
+            }, 100);
+        })
+}
 
 
 start()
