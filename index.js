@@ -108,6 +108,7 @@ function addDept() {
             }, 100);
         })
 }
+
 function addRole() {
     const newRole = () => {
         let dtd = []
@@ -159,6 +160,7 @@ function addRole() {
             }, 100);
         })
 }
+
 function addEmployee() {
     let etd = []
     sql.query("select * from employees", (err, results) => {
@@ -223,6 +225,7 @@ function addEmployee() {
             }, 100);
         })
 }
+/////////////////////////
 function updateEmployeeRole() {
     let etd2 = []
     sql.query("SELECT * FROM employees", (err, results) => {updateETd(results)})
@@ -279,8 +282,11 @@ function updateEmployeeRole() {
             }, 100);
         })
 }
+/////////////////////////
+
 function quit() {
     console.log("Bye")
     return process.exit()
 }
+
 start()
