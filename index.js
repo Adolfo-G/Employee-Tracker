@@ -1,6 +1,7 @@
 const inquirer = require("inquirer")
 const mysql = require("mysql2")
 require('dotenv').config();
+const cTable = require('console.table');
 
 const sql = mysql.createConnection(
     {
@@ -57,7 +58,7 @@ function start() {
 
 function viewDept() {
     const showDept = () => {
-        sql.query("SELECT * FROM departments", (err, results) => { console.table(results) });
+        sql.query("SELECT * FROM departments", (err, results) => { console.log(cTable.getTable(results)) });
         setTimeout(() => {
             start();
         }, 100);
@@ -67,7 +68,7 @@ function viewDept() {
 
 function viewRole() {
     const showRole = () => {
-        sql.query("SELECT title, salary, department FROM roles INNER JOIN departments ON roles.department_id = departments.id;", (err, results) => { console.table(results) });
+        sql.query("SELECT title, salary, department FROM roles INNER JOIN departments ON roles.department_id = departments.id;", (err, results) => { console.log(cTable.getTable(results)) });
         setTimeout(() => {
             start();
         }, 100);
@@ -77,7 +78,7 @@ function viewRole() {
 
 function viewEmployees() {
     const showEmployees = () => {
-        sql.query("SELECT employees.id,first_name,last_name,title,department,salary,employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id;", (err, results) => { console.table(results) });
+        sql.query("SELECT employees.id,first_name,last_name,title,department,salary,employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id;", (err, results) => { console.log(cTable.getTable(results)) });
         setTimeout(() => {
             start();
         }, 100);
@@ -100,7 +101,7 @@ function addDept() {
             sql.query(`INSERT INTO departments(department) VALUES("${data.deptName}")`, (err, results) => { console.log("Department Added") })
         })
         .then((data) => {
-            sql.query(`SELECT *FROM departments`, (err, results) => { console.table(results) })
+            sql.query(`SELECT *FROM departments`, (err, results) => { console.log(cTable.getTable(results)) })
         })
         .then((data) => {
             setTimeout(() => {
@@ -121,7 +122,6 @@ function addRole() {
                 })
             }
         }
-        console.log(dtd)
         return inquirer.prompt([
             {
                 type: "input",
@@ -143,16 +143,12 @@ function addRole() {
     }
     newRole()
         .then((data) => {
-            console.log(data)
             sql.query(`INSERT INTO roles(title, salary, department_id) VALUES("${(data.roleName)}","${data.salary}","${data.deptChoice}")`, (err, results) => {
-                if (err) {
-                    throw err
-                }
-                console.log(results)
+                if (err) {throw err}
             })
         })
         .then((data) => {
-            sql.query(`SELECT *FROM roles`, (err, results) => { console.table(results) })
+            sql.query(`SELECT *FROM roles`, (err, results) => { console.log(cTable.getTable(results)) })
         })
         .then((data) => {
             setTimeout(() => {
@@ -214,10 +210,12 @@ function addEmployee() {
     }
     newEmployee()
         .then((data) => {
-            sql.query(`INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES("${data.firstName}","${data.lastName}","${data.deptChoice}","${data.managerChoice}")`, (err, results) => { console.table("Employee Added") })
+            sql.query(`INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES("${data.firstName}","${data.lastName}","${data.deptChoice}","${data.managerChoice}")`, 
+            (err, results) => { console.log("Employee Added") })
         })
         .then((data) => {
-            sql.query(`SELECT employees.id,first_name,last_name,title,department,salary,employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id;`, (err, results) => { console.table(results) })
+            sql.query(`SELECT employees.id,first_name,last_name,title,department,salary,employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id;`, 
+            (err, results) => { console.log(cTable.getTable(results)) })
         })
         .then((data) => {
             setTimeout(() => {
@@ -271,10 +269,12 @@ function updateEmployeeRole() {
     }
     newEmployeeUpdate()
         .then((data) => {
-            sql.query(`UPDATE employees SET role_id = ${data.updatedRole} WHERE id =${data.chosenEmployee}`, (err, results) => { console.table("Employee Updated");console.log(err); })
+            sql.query(`UPDATE employees SET role_id = ${data.updatedRole} WHERE id =${data.chosenEmployee}`, 
+            (err, results) => { console.log("Employee Updated") })
         })
         .then((data) => {
-            sql.query(`SELECT employees.id,first_name,last_name,title,department,salary,employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id;`, (err, results) => { console.table(results) })
+            sql.query(`SELECT employees.id,first_name,last_name,title,department,salary,employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id;`, 
+            (err, results) => { console.log(cTable.getTable(results)) })
         })
         .then((data) => {
             setTimeout(() => {
