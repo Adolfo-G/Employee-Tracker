@@ -223,6 +223,61 @@ function addEmployee() {
             }, 100);
         })
 }
+function updateEmployeeRole() {
+    let etd2 = []
+    sql.query("SELECT * FROM employees", (err, results) => {updateETd(results)})
+    function updateETd(value) {
+        for (let l = 0; l < value.length; l++) {
+            etd2.push({
+                name: value[l]["first_name"],
+                value: value[l]["id"]
+            })
+        }
+    }
 
+    let rtd2 = []
+    sql.query("SELECT * FROM roles", (err, results) => { updateRTd(results) })
+    function updateRTd(value) {
+        for (let n = 0; n < value.length; n++) {
+            rtd2.push({
+                name: value[n]["title"],
+                value: value[n]["id"]
+            })
+        }
+    }
+    const newEmployeeUpdate = () => {
+        return inquirer.prompt([
+            {
+                type: "input",
+                name: "test",
+                message: "Changes are permanent, press enter to continue",
+            },
+            {
+                type: "list",
+                name: "chosenEmployee",
+                message: "Please select an employee to change their role:",
+                choices: etd2
+            },
+            {
+                type: "list",
+                name: "updatedRole",
+                message: "Please select a new role:",
+                choices: rtd2
+            }
+        ])
+    }
+    newEmployeeUpdate()
+        .then((data) => {
+            sql.query(`UPDATE employees SET role_id = ${data.updatedRole} WHERE id =${data.chosenEmployee}`, (err, results) => { console.table("Employee Updated");console.log(err); })
+        })
+        .then((data) => {
+            sql.query(`SELECT employees.id,first_name,last_name,title,department,salary,employees.manager_id FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id;`, (err, results) => { console.table(results) })
+        })
+        .then((data) => {
+            setTimeout(() => {
+                start();
+            }, 100);
+        })
+}
 
 start()
