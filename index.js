@@ -225,7 +225,7 @@ function addEmployee() {
             }, 100);
         })
 }
-/////////////////////////
+
 function updateEmployeeRole() {
     let etd2 = []
     sql.query("SELECT * FROM employees", (err, results) => {updateETd(results)})
@@ -282,7 +282,6 @@ function updateEmployeeRole() {
             }, 100);
         })
 }
-/////////////////////////
 
 function quit() {
     console.log("Bye")

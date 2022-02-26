@@ -15,10 +15,10 @@ VALUES ("Front End Developer", 80000, 1),
        
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
-VALUES ("Mark", "Hammel",1,null),
-       ("Samuel", "Jackson",2,1),
-       ("Hayden","Christiansen",3,1),
-       ("George","Lucas",4,null),
-       ("Harrison","Ford",5,4),
-       ("Carrie","Fisher",6,1),
-       ("Dominic","Torreto",1,3);
+VALUES ("Mark", "Smith",1,null),
+       ("Liam", "Johnson",2,1),
+       ("Noah","Miller",3,1),
+       ("Ava","Davis",4,null),
+       ("Olivia","Garcia",5,4),
+       ("Emma","Williams",6,1),
+       ("Elijah","Anderson",1,3);
